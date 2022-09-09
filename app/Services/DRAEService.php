@@ -36,7 +36,6 @@ class DRAEService
 
         $body = self::getDefinitions(strip_tags($body));
         $defs = collect($body['definitions']);
-
         // obtiene una definicion aleatoria si tiene mas de 1 asepción
         //if ($defs->count() > 1) {
           //return $defs->random()['definition'];
@@ -102,6 +101,7 @@ class DRAEService
     {
         $text = strip_tags($html);
         $text = str_replace('U.', '', $text);
+        $text = str_replace(' c.', '', $text);
         $text = str_replace('Era u.', '', $text);
         $text = str_replace('p. us.', '', $text);
         $text = str_replace('desus.', '', $text);
@@ -109,9 +109,11 @@ class DRAEService
         $text = str_replace('Esp.', '', $text);
         $text = str_replace('. y ', '.', $text);
         $text = str_replace('m.', '', $text);
+        $text = str_replace(' prnl.', '', $text);
         $text = str_replace('f.', '', $text);
         $text = str_replace('t. repetida', '', $text);
         $text = str_replace(' interj.', 'interj.', $text);
+        $text = Str::before($text, '.Conjugación de');
         $text = Str::after($text, '1.');
 
         $defs = [];
@@ -125,7 +127,6 @@ class DRAEService
 
           $text = $after;
         }
-
         $definitions = [];
         foreach ($defs as $def) {
             $data = explode('.', $def, 2);
@@ -134,13 +135,13 @@ class DRAEService
                     $definitions[] =
                       [
                         'type'       => rtrim(ltrim($data[0])),
-                        'definition' => rtrim(ltrim($data[1]))
+                        'definition' => utf8_decode(rtrim(ltrim($data[1])))
                       ];
                 } else {
                     $definitions[] =
                       [
                         'type'       => 'def',
-                        'definition' => rtrim(ltrim($data[0] ))
+                        'definition' => utf8_decode(rtrim(ltrim($data[0])))
                       ];
                 }
             }

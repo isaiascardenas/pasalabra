@@ -53,7 +53,7 @@ class Rosco extends Model
     {
         return $this
             ->belongsToMany(Palabra::class)
-            ->withPivot('letra')
+            ->withPivot('letra', 'definicion', 'estado')
             ->orderBy('palabra_rosco.letra');
     }
 }

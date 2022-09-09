@@ -80,7 +80,9 @@ class RoscosController extends Controller
 
     public function show(Rosco $rosco)
     {
-        return $rosco->palabras;
+        return inertia()->render('Games/Roscos/Show', [
+          'rosco' => $rosco->load('palabras'),
+        ]);
     }
 
     public function showPublic(Rosco $rosco)
