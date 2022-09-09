@@ -49,6 +49,7 @@ class RoscosController extends Controller
           if ($contiene->contains($letra)) {
             $palabra = Palabra::where('inicial', '!=', $letra)
               ->where('drae_id', '!=', null)
+              ->whereNotIn('id', $rosco->palabras->pluck('id'))
               ->where('palabra', 'ilike', '%'.$letra.'%')
               ->get()
               ->random();
@@ -60,6 +61,7 @@ class RoscosController extends Controller
           } else {
             $palabra = Palabra::where('inicial', $letra)
               ->where('drae_id', '!=', null)
+              ->whereNotIn('id', $rosco->palabras->pluck('id'))
               ->get()
               ->random();
 

@@ -3,30 +3,139 @@ import { Link, Head } from '@inertiajs/inertia-react';
 
 export default function Rosco(props) {
   console.log(props.rosco);
-  const letras = props.rosco.palabras.map((letra) =>
-    <div key={letra.id} className="col-span-1">
-      <div className="flex-1 truncate">
-        <div className="flex items-center space-x-3">
-          <h3 className="text-sm font-medium text-gray-900 truncate">{letra.pivot.letra}</h3>
-        </div>
-        <p className="mt-1 text-sm text-gray-500 truncate">{letra.palabra}</p>
-      </div>
+  const letras = props.rosco.palabras.map((letra) => (
+    <div key={letra.id} className="flex items-center space-x-3">
+      <span className="text-lg font-bold text-center text-white uppercase bg-indigo-600 rounded-full w-7 h-7">
+        {letra.pivot.letra}
+      </span>
     </div>
+  ));
+  return (
+    <>
+      <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <p className="py-12">Rosco</p>
+        <div className="justify-center grid">
+          <div className="bg-white rounded-lg shadow">
+            <div className="px-4 py-5 sm:p-6">
+              <div className="-mb-4 grid grid-cols-9 gap-2">
+                <div className="mx-auto col-span-1 col-start-5">
+                  {letras[0]}
+                </div>
+              </div>
+              <div className="mb-1 grid grid-cols-10 gap-2">
+                <div className="mx-auto col-span-1 col-start-4">
+                  {letras[24]}
+                </div>
+                <div className="mx-auto col-span-1 col-start-7">
+                  {letras[1]}
+                </div>
+              </div>
+              <div className="my-1 grid grid-cols-10 gap-2">
+                <div className="mx-auto col-span-1 col-start-3">
+                  {letras[23]}
+                </div>
+                <div className="mx-auto col-span-1 col-start-8">
+                  {letras[2]}
+                </div>
+              </div>
+              <div className="my-1 grid grid-cols-8 gap-2">
+                <div className="mx-auto col-span-1 col-start-2">
+                  {letras[22]}
+                </div>
+                <div className="mx-auto col-span-1 col-start-7">
+                  {letras[3]}
+                </div>
+              </div>
+              <div className="my-2 grid grid-cols-4 gap-2">
+                <div className="mx-auto col-span-1 col-start-1">
+                  {letras[21]}
+                </div>
+                <div className="mx-auto col-span-1 col-start-4">
+                  {letras[4]}
+                </div>
+              </div>
+              <div className="my-3 grid grid-cols-7 gap-2">
+                <div className="mx-auto col-span-1 col-start-1">
+                  {letras[20]}
+                </div>
+                <div className="mx-auto col-span-1 col-start-7">
+                  {letras[5]}
+                </div>
+              </div>
+
+              <div className="my-3 grid grid-cols-12 gap-2">
+                <div className="mx-auto col-span-1 col-start-1">
+                  {letras[19]}
+                </div>
+                <div className="mx-auto col-span-1 col-start-12">
+                  {letras[6]}
+                </div>
+              </div>
+
+              <div className="my-3 grid grid-cols-7 gap-2">
+                <div className="mx-auto col-span-1 col-start-1">
+                  {letras[18]}
+                </div>
+                <div className="mx-auto col-span-1 col-start-7">
+                  {letras[7]}
+                </div>
+              </div>
+              <div className="my-2 grid grid-cols-4 gap-2">
+                <div className="mx-auto col-span-1 col-start-1">
+                  {letras[17]}
+                </div>
+                <div className="mx-auto col-span-1 col-start-4">
+                  {letras[8]}
+                </div>
+              </div>
+              <div className="my-1 grid grid-cols-8 gap-2">
+                <div className="mx-auto col-span-1 col-start-2">
+                  {letras[16]}
+                </div>
+                <div className="mx-auto col-span-1 col-start-7">
+                  {letras[9]}
+                </div>
+              </div>
+              <div className="my-1 grid grid-cols-10 gap-2">
+                <div className="mx-auto col-span-1 col-start-3">
+                  {letras[15]}
+                </div>
+                <div className="mx-auto col-span-1 col-start-8">
+                  {letras[10]}
+                </div>
+              </div>
+              <div className="mb-1 grid grid-cols-10 gap-2">
+                <div className="mx-auto col-span-1 col-start-4">
+                  {letras[14]}
+                </div>
+                <div className="mx-auto col-span-1 col-start-7">
+                  {letras[1]}
+                </div>
+              </div>
+              <div className="-mt-4 grid grid-cols-10 gap-2">
+                <div className="mx-auto col-span-1 col-start-5">
+                  {letras[13]}
+                </div>
+                <div className="mx-auto col-span-1 col-start-6">
+                  {letras[12]}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-between">
+            <div className="flex space-x-3">
+              <span className="flex items-center justify-center w-16 h-16 text-xl font-bold text-center text-white uppercase bg-indigo-600 rounded-full">
+                183
+              </span>
+            </div>
+            <div className="flex space-x-3">
+              <span className="flex items-center justify-center w-16 h-16 text-xl font-bold text-center text-white uppercase bg-green-600 rounded-full">
+                0
+              </span>
+            </div>
+        </div>
+      </div>
+    </>
   );
-    return (
-        <>
-<div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-      <p className="py-12">Rosco</p>
-  <div className="h-screen grid place-items-center">
-  <div className="overflow-hidden bg-white rounded-lg shadow">
-  <div className="px-4 py-5 sm:p-6">
-      <div className="grid grid-cols-12 gap-2">
-      {letras}
-      </div>
-  </div>
-  </div>
-</div>
-      </div>
-        </>
-    );
 }

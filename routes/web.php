@@ -22,7 +22,7 @@ Route::get('/', function () {
 });
 
 Route::get('/test', function () {
-  $word = App\Models\Palabra::find(206);
+  $word = App\Models\Palabra::find(622);
   $definicion = App\Services\DRAEService::getDefinition($word);
 
   $rosco = App\Models\Rosco::find(7);

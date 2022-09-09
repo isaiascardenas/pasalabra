@@ -127,25 +127,27 @@ class DRAEService
 
           $text = $after;
         }
+
         $definitions = [];
         foreach ($defs as $def) {
             $data = explode('.', $def, 2);
             if (strlen(rtrim(ltrim($data[0])) > 2)) {
-                if (count($data) > 1 && strlen($data[0]) < 6) {
+                if (count($data) > 1 && strlen(rtrim(ltrim($data[0]))) < 8) {
                     $definitions[] =
                       [
                         'type'       => rtrim(ltrim($data[0])),
-                        'definition' => utf8_decode(rtrim(ltrim($data[1])))
+                        'definition' => mb_convert_encoding(rtrim(ltrim($data[1])), 'UTF-8', 'HTML-ENTITIES')
                       ];
                 } else {
                     $definitions[] =
                       [
                         'type'       => 'def',
-                        'definition' => utf8_decode(rtrim(ltrim($data[0])))
+                        'definition' => mb_convert_encoding(rtrim(ltrim($data[0])), 'UTF-8', 'HTML-ENTITIES')
                       ];
                 }
             }
         }
+
         $body =
         [
             'definitions' => $definitions,
