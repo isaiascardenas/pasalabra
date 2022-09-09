@@ -22,10 +22,12 @@ Route::get('/', function () {
 });
 
 Route::get('/test', function () {
-  $word = App\Models\Palabra::find(173);
+  //$word = App\Models\Palabra::find(336);
+  //$word = App\Models\Palabra::find(968);
+  //$word = App\Models\Palabra::find(234);
+  //$word = App\Models\Palabra::find(126);
+  $word = App\Models\Palabra::find(130);
   $definicion = App\Services\DRAEService::getDefinition($word);
-
-  dd($definicion);
 
   $rosco = App\Models\Rosco::find(7);
   $rosco->palabras->each(function ($word) use ($rosco) {
@@ -44,6 +46,9 @@ Route::get('roscos/{rosco}/public', [RoscosController::class, 'showPublic'])
     ->name('roscos.show.public');
 Route::get('roscos/create', [RoscosController::class, 'create'])
     ->name('roscos.create');
+
+Route::get('games/roscos', [RoscosController::class, 'index'])
+    ->name('games.rosco');
 Route::get('games/memoria', [DashboardController::class, 'memoria'])
     ->name('games.memoria');
 

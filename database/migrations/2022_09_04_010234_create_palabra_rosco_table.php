@@ -18,6 +18,9 @@ return new class extends Migration
             $table->foreignId('palabra_id')->constrained('palabras');
             $table->foreignId('rosco_id')->constrained('roscos');
             $table->string('letra');
+            $table->string('tipo_definicion')->default('def');
+            $table->text('definicion')->nullable();
+            $table->string('estado')->default('inicial');
             $table->timestamps();
         });
     }

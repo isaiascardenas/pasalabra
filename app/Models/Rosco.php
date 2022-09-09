@@ -11,10 +11,14 @@ class Rosco extends Model
 
     protected $fillable = [
       'opciones',
+      'comodines',
+      'tiempo',
+      'correctas',
     ];
 
     protected $casts = [
       'opciones' => 'json',
+      'comodines' => 'json',
     ];
 
     public static $abcdario = [

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Palabra;
 use GuzzleHttp\Client;
+use Illuminate\Support\Str;
 
 class DRAEService
 {
@@ -34,8 +35,15 @@ class DRAEService
         $body = str_replace("\t", '', $body);
 
         $body = self::getDefinitions(strip_tags($body));
-        dd($body);
-        return collect($body['definitions'])->random()['definition'];
+        $defs = collect($body['definitions']);
+
+        // obtiene una definicion aleatoria si tiene mas de 1 asepción
+        //if ($defs->count() > 1) {
+          //return $defs->random()['definition'];
+        //}
+
+        return array_key_exists('definition', $defs->first()) ? $defs->first()['definition'] : '';
+
 
     } catch (Exception $e) {
       \Log::info('Error:', $word);
@@ -97,27 +105,44 @@ class DRAEService
         $text = str_replace('Era u.', '', $text);
         $text = str_replace('p. us.', '', $text);
         $text = str_replace('desus.', '', $text);
+        $text = str_replace('coloq.', '', $text);
+        $text = str_replace('Esp.', '', $text);
         $text = str_replace('. y ', '.', $text);
         $text = str_replace('m.', '', $text);
         $text = str_replace('f.', '', $text);
         $text = str_replace('t. repetida', '', $text);
         $text = str_replace(' interj.', 'interj.', $text);
+        $text = Str::after($text, '1.');
 
-        $first = self::find_between($text, '1.', '.2');
-        if ($first == '') {
-            $first = self::find_between($text, '1.', '.');
+        $defs = [];
+        for ($i = 2; $i < 7; $i++) {
+          $after = Str::after($text, '.'.$i.'.');
+          if ($after == $text) {
+            $defs[] = Str::substr($text, 0, strlen($text) - 1);
+            break;
+          }
+          $defs[] = Str::before($text, '.'.$i.'.');
+
+          $text = $after;
         }
 
-        $defs = [$first, self::find_between($text, '2.', '.3')];
         $definitions = [];
         foreach ($defs as $def) {
             $data = explode('.', $def, 2);
             if (strlen(rtrim(ltrim($data[0])) > 2)) {
-              $definitions[] =
-                [
-                  'type'       => count($data) > 1 ? $data[0] : 'def',
-                  'definition' => count($data) > 1 ? rtrim(ltrim($data[1])) : rtrim(ltrim($data[0])),
-                ];
+                if (count($data) > 1 && strlen($data[0]) < 6) {
+                    $definitions[] =
+                      [
+                        'type'       => rtrim(ltrim($data[0])),
+                        'definition' => rtrim(ltrim($data[1]))
+                      ];
+                } else {
+                    $definitions[] =
+                      [
+                        'type'       => 'def',
+                        'definition' => rtrim(ltrim($data[0] ))
+                      ];
+                }
             }
         }
         $body =
@@ -126,21 +151,5 @@ class DRAEService
         ];
 
         return $body;
-    }
-
-  public static function find_between(
-        $string,
-        $start,
-        $end)
-    {
-        $string = ' '.$string;
-        $ini = strpos($string, $start);
-        if ($ini == 0) {
-            return '';
-        }
-        $ini += strlen($start);
-        $len = strpos($string, $end, $ini) - $ini;
-
-        return substr($string, $ini, $len);
     }
 }

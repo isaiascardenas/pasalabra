@@ -31,18 +31,24 @@ class WordsRandom extends Command
      */
     public function handle()
     {
+      $lastId = DB::table('palabras')->orderByDesc('id')->first()->id;
+      DB::statement(
+        'ALTER SEQUENCE palabras_id_seq RESTART WITH '. $lastId + 1
+      );
+
       for ($x = 0; $x < 500; $x++) {
         $word = Http::get('https://clientes.api.greenborn.com.ar/public-random-word')
           ->json()[0];
 
         $this->line('Palabra: ' . $word);
-
-        if (Palabra::where('palabra', $word)->doesntExist()) {
+        if (Palabra::where('palabra', $word)->get()->isEmpty()) {
           Palabra::create([
             'palabra' => $word,
             'inicial' => Str::slug($word)[0],
           ]);
           sleep(1);
+        } else {
+          $this->line($word . ' ya existe');
         }
       }
 

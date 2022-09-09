@@ -15,7 +15,10 @@ return new class extends Migration
     {
         Schema::create('roscos', function (Blueprint $table) {
             $table->id();
-            $table->json('opciones');
+            $table->json('opciones')->nullable();
+            $table->json('comodines')->nullable();
+            $table->integer('correctas')->default(0);
+            $table->string('tiempo')->nullable();
             $table->timestamps();
         });
     }

@@ -11,19 +11,31 @@ class RoscosController extends Controller
 {
     public function index()
     {
-        //
+        return 'Roscos index';
     }
 
     public function create()
     {
         $rosco = Rosco::create([
+          'correctas' => 0,
           'opciones' => [
             'contiene' => 12,
+          ],
+          'comodines' => [
+            'otra_oportunidad' => true,
+            'relectura'        => true,
+            'cambio_letra'     => true,
           ],
         ]);
 
         $abc = collect(Rosco::$abcdario);
         $contiene = $abc->random($rosco->opciones['contiene']);
+        //
+        $contiene->push('ñ');
+        $contiene->push('j');
+        $contiene->push('x');
+        $contiene->push('y');
+        //
 
         if (rand(1,10) < 8) {
           collect(['ñ', 'x', 'z', 'h', 'g', 'j', 'y', 'v'])->each(function ($l) use ($contiene) {
@@ -33,32 +45,29 @@ class RoscosController extends Controller
           });
         }
 
-        \Log::info($contiene->toArray());
-
         $abc->each(function ($letra) use ($contiene, $rosco) {
-          \Log::info([
-            'letra' => $letra,
-            'contiene' => $contiene->contains($letra),
-          ]);
           if ($contiene->contains($letra)) {
             $palabra = Palabra::where('inicial', '!=', $letra)
               ->where('drae_id', '!=', null)
               ->where('palabra', 'ilike', '%'.$letra.'%')
               ->get()
               ->random();
-            $rosco->palabras()->attach($palabra->id, ['letra' => $letra]);
+
+            $rosco->palabras()->attach($palabra->id, [
+              'letra' => $letra,
+              'definicion' => DRAEService::getDefinition($palabra),
+            ]);
           } else {
             $palabra = Palabra::where('inicial', $letra)
               ->where('drae_id', '!=', null)
               ->get()
               ->random();
-            $rosco->palabras()->attach($palabra->id, ['letra' => $letra]);
-          }
-        });
 
-        $rosco->palabras->each(function ($word) {
-          $word->definicion = DRAEService::getDefinition($word);
-          $word->save();
+            $rosco->palabras()->attach($palabra->id, [
+              'letra' => $letra,
+              'definicion' => DRAEService::getDefinition($palabra),
+            ]);
+          }
         });
 
         return 'Rosco creado';
