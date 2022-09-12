@@ -1,15 +1,60 @@
 import React from 'react';
-import { Link, Head } from '@inertiajs/inertia-react';
+import Echo from 'laravel-echo';
 
 export default function Rosco(props) {
+  console.log(process);
+
+  const options = {
+    broadcaster: 'pusher',
+    key: process.env.MIX_PUSHER_APP_KEY,
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    forceTLS: true,
+
+    //authEndpoint is your apiUrl + /broadcasting/auth
+    //authEndpoint: process.env.pusher.authEndpoint,
+  };
+
+  const echo = new Echo(options);
+  echo.private(`App.Roscos.${props.rosco.id}`).notification((data) => {
+    console.log(data);
+  });
+
   console.log(props.rosco);
-  const letras = props.rosco.palabras.map((letra) => (
-    <div key={letra.id} className="flex items-center space-x-3">
-      <span className="text-lg font-bold text-center text-white uppercase bg-indigo-600 rounded-full w-7 h-7">
-        {letra.pivot.letra}
-      </span>
-    </div>
-  ));
+  const letras = props.rosco.palabras_roscos.map((letra) => {
+    if (letra.estado == 'pasapalabra') {
+      return (
+        <div key={letra.id} className="flex items-center space-x-3">
+          <span className="text-lg font-bold text-center text-white uppercase bg-yellow-500 rounded-full w-7 h-7">
+            {letra.letra}
+          </span>
+        </div>
+      );
+    } else if (letra.estado == 'correcto') {
+      return (
+        <div key={letra.id} className="flex items-center space-x-3">
+          <span className="text-lg font-bold text-center text-white uppercase bg-green-600 rounded-full w-7 h-7">
+            {letra.letra}
+          </span>
+        </div>
+      );
+    } else if (letra.estado == 'incorrecto') {
+      return (
+        <div key={letra.id} className="flex items-center space-x-3">
+          <span className="text-lg font-bold text-center text-white uppercase bg-red-600 rounded-full w-7 h-7">
+            {letra.letra}
+          </span>
+        </div>
+      );
+    }
+    return (
+      <div key={letra.id} className="flex items-center space-x-3">
+        <span className="text-lg font-bold text-center text-white uppercase bg-indigo-600 rounded-full w-7 h-7">
+          {letra.letra}
+        </span>
+      </div>
+    );
+  });
+
   return (
     <>
       <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -124,16 +169,16 @@ export default function Rosco(props) {
           </div>
         </div>
         <div className="flex justify-between">
-            <div className="flex space-x-3">
-              <span className="flex items-center justify-center w-16 h-16 text-xl font-bold text-center text-white uppercase bg-indigo-600 rounded-full">
-                183
-              </span>
-            </div>
-            <div className="flex space-x-3">
-              <span className="flex items-center justify-center w-16 h-16 text-xl font-bold text-center text-white uppercase bg-green-600 rounded-full">
-                0
-              </span>
-            </div>
+          <div className="flex space-x-3">
+            <span className="flex items-center justify-center w-16 h-16 text-xl font-bold text-center text-white uppercase bg-indigo-600 rounded-full">
+              183
+            </span>
+          </div>
+          <div className="flex space-x-3">
+            <span className="flex items-center justify-center w-16 h-16 text-xl font-bold text-center text-white uppercase bg-green-600 rounded-full">
+              0
+            </span>
+          </div>
         </div>
       </div>
     </>

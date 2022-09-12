@@ -44,6 +44,8 @@ Route::get('roscos/{rosco}/public', [RoscosController::class, 'showPublic'])
     ->name('roscos.show.public');
 Route::get('roscos/{rosco}', [RoscosController::class, 'show'])
     ->name('roscos.show');
+Route::post('roscos/palabras/{palabraRosco}', [RoscosController::class, 'palabraEstado'])
+    ->name('roscos.palabras.estado');
 
 Route::get('games/roscos', [RoscosController::class, 'index'])
     ->name('games.rosco');

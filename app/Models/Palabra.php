@@ -12,13 +12,17 @@ class Palabra extends Model
     protected $fillable = [
       'inicial',
       'palabra',
-      'definicion',
-      'estado',
       'drae_id',
     ];
 
-    public function roscos()
+    public function palabrasRoscos()
     {
-        return $this->belongsToMany(Rosco::class);
+        return $this->hasMany(PalabraRosco::class)
+            ->orderBy('palabra_rosco.letra');
     }
+
+    //public function roscos()
+    //{
+        //return $this->belongsToMany(Rosco::class);
+    //}
 }

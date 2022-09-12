@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Palabra;
+use App\Models\PalabraRosco;
 use App\Models\Rosco;
+use App\Notification\PalabraRoscoEstado;
 use App\Services\DRAEService;
 use Illuminate\Http\Request;
 
@@ -83,14 +85,14 @@ class RoscosController extends Controller
     public function show(Rosco $rosco)
     {
         return inertia()->render('Games/Roscos/Show', [
-          'rosco' => $rosco->load('palabras'),
+          'rosco' => $rosco->load('palabrasRoscos.palabra'),
         ]);
     }
 
     public function showPublic(Rosco $rosco)
     {
       return inertia()->render('Games/Roscos/Public', [
-        'rosco' => $rosco->load('palabras'),
+        'rosco' => $rosco->load('palabrasRoscos.palabra'),
       ]);
     }
 
@@ -107,5 +109,19 @@ class RoscosController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function palabraEstado(PalabraRosco $palabraRosco)
+    {
+
+        $palabraRosco->update($this->validate(request(), [
+            'estado'  => ['required'],
+        ]));
+
+        $palabraRosco->rosco->notify(new PalabraRoscoEstado($palabraRosco));
+
+        return redirect()
+            ->route('roscos.show',  ['rosco' => $palabraRosco->rosco_id])
+            ->with('success', 'Rosco actualizado.');
     }
 }
