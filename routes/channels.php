@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
+Broadcast::channel('roscos.{roscoId}', function ($user, $roscoId) {
+    return true;
+});
+
 Broadcast::channel('private-roscos.{roscoId}', function ($roscoId) {
     return true;
 });

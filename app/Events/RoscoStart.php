@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\PalabraRosco;
+use App\Models\Rosco;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -11,28 +11,27 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-
-class PalabraStatusUpdated implements ShouldBroadcastNow
+class RoscoStart implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    protected $palabraRosco;
+    protected $rosco;
 
-    public function __construct(PalabraRosco $palabraRosco)
+    public function __construct(Rosco $rosco)
     {
-        $this->palabraRosco = $palabraRosco;
+        $this->rosco = $rosco;
     }
 
     public function broadcastWith()
     {
-        return ['palabra-rosco' => $this->palabraRosco];
+        return ['rosco' => $this->rosco];
     }
 
     public function broadcastOn()
     {
         return new PrivateChannel(
             'roscos.'
-            .$this->palabraRosco->rosco_id
+            .$this->rosco->id
         );
     }
 }

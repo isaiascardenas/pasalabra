@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PalabraStatusUpdated;
+use App\Events\RoscoStart;
+use App\Events\RoscoStop;
 use App\Models\Palabra;
 use App\Models\PalabraRosco;
 use App\Models\Rosco;
 use App\Notifications\PalabraRoscoEstado;
-use App\Events\PalabraStatusUpdated;
 use App\Services\DRAEService;
 use Illuminate\Http\Request;
 
@@ -122,17 +124,31 @@ class RoscosController extends Controller
         //
     }
 
+    public function start(Rosco $rosco)
+    {
+        dd('start');
+        RoscoStart::dispatch($rosco);
+    }
+
+    public function stop(Rosco $rosco)
+    {
+        dd('stop');
+        RoscoStop::dispatch($rosco);
+    }
+
     public function palabraEstado(PalabraRosco $palabraRosco)
     {
         $palabraRosco->update($this->validate(request(), [
             'estado'  => ['required'],
         ]));
 
-        \Log::info([
-          'before event' => $palabraRosco->rosco_id,
-        ]);
+        if (request()->estado == 'correcto') {
+          $palabraRosco->rosco->update([
+            'correctas' => $palabraRosco->rosco->correctas + 1,
+          ]);
+        }
+
         PalabraStatusUpdated::dispatch($palabraRosco);
-        //$palabraRosco->rosco->notify(new PalabraRoscoEstado($palabraRosco));
 
         return redirect()
             ->route('roscos.show',  ['rosco' => $palabraRosco->rosco_id])

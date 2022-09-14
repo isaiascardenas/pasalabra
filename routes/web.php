@@ -18,39 +18,34 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
+    return redirect()->route('login');
+});
+
+Route::middleware(['auth', 'web'])->group(function () {
+  Route::get('/home', function () {
     return Inertia::render('Home');
-});
+  })->name('home');
 
-Route::get('/test', function () {
-  $word = App\Models\Palabra::find(622);
-  $definicion = App\Services\DRAEService::getDefinition($word);
-
-  $rosco = App\Models\Rosco::find(7);
-  $rosco->palabras->each(function ($word) use ($rosco) {
-    $definicion = App\Services\DRAEService::getDefinition($word);
-    $word->definicion = $definicion;
-    $rosco->palabras()->updateExistingPivot($word->id, [
-      'definicion' => $definicion,
-    ]);
-  });
-
-  dd($rosco->palabras);
-  return 'Rosco creado';
-});
-
-Route::get('roscos/create', [RoscosController::class, 'create'])
+  Route::get('roscos/create', [RoscosController::class, 'create'])
     ->name('roscos.create');
-Route::get('roscos/{rosco}/public', [RoscosController::class, 'showPublic'])
+  Route::get('roscos/{rosco}/public', [RoscosController::class, 'showPublic'])
     ->name('roscos.show.public');
-Route::get('roscos/{rosco}', [RoscosController::class, 'show'])
+  Route::get('roscos/{rosco}', [RoscosController::class, 'show'])
     ->name('roscos.show');
-Route::post('roscos/palabras/{palabraRosco}', [RoscosController::class, 'palabraEstado'])
-    ->name('roscos.palabras.estado');
 
-Route::get('games/roscos', [RoscosController::class, 'index'])
+  Route::post('roscos/palabras/{palabraRosco}', [RoscosController::class, 'palabraEstado'])
+    ->name('roscos.palabras.estado');
+  Route::post('roscos/start/{rosco}', [RoscosController::class, 'start'])
+    ->name('roscos.start');
+  Route::post('roscos/stop/{rosco}', [RoscosController::class, 'stop'])
+    ->name('roscos.stop');
+
+  Route::get('games/roscos', [RoscosController::class, 'index'])
     ->name('games.rosco');
-Route::get('games/memoria', [DashboardController::class, 'memoria'])
+  Route::get('games/memoria', [DashboardController::class, 'memoria'])
     ->name('games.memoria');
+});
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
