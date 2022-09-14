@@ -48,37 +48,37 @@ export default function Show(props) {
     let buttons;
 
     if (letra.estado == 'inicial' || letra.estado == 'pasapalabra') {
-    buttons = (
-      <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
-        <button
-          type="button"
-          onClick={() => {
-            changeEstado(letra, 'correcto');
-          }}
-          className="inline-flex justify-center w-full px-4 py-2 text-base font-semibold text-green-600 border border-transparent border-green-500 bg-green-50 rounded-md shadow-sm hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
-        >
-          Correcto
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            changeEstado(letra, 'incorrecto');
-          }}
-          className="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-semibold text-red-600 border border-transparent border-red-500 bg-red-50 rounded-md shadow-sm hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
-        >
-          Incorrecto
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            changeEstado(letra, 'pasapalabra');
-          }}
-          className="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent col-span-2 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
-        >
-          Pasapalabra
-        </button>
-      </div>
-    );
+      buttons = (
+        <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              changeEstado(letra, 'correcto');
+            }}
+            className="inline-flex justify-center w-full px-4 py-2 text-base font-semibold text-green-600 border border-transparent border-green-500 bg-green-50 rounded-md shadow-sm hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
+          >
+            Correcto
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              changeEstado(letra, 'incorrecto');
+            }}
+            className="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-semibold text-red-600 border border-transparent border-red-500 bg-red-50 rounded-md shadow-sm hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
+          >
+            Incorrecto
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              changeEstado(letra, 'pasapalabra');
+            }}
+            className="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent col-span-2 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+          >
+            Pasapalabra
+          </button>
+        </div>
+      );
     }
 
     return (

@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Palabra;
 use App\Models\PalabraRosco;
 use App\Models\Rosco;
-use App\Notification\PalabraRoscoEstado;
+use App\Notifications\PalabraRoscoEstado;
+use App\Events\PalabraStatusUpdated;
 use App\Services\DRAEService;
 use Illuminate\Http\Request;
 
@@ -51,25 +52,35 @@ class RoscosController extends Controller
           if ($contiene->contains($letra)) {
             $palabra = Palabra::where('inicial', '!=', $letra)
               ->where('drae_id', '!=', null)
-              ->whereNotIn('id', $rosco->palabras->pluck('id'))
+              ->whereNotIn('id', $rosco->palabrasRoscos->pluck('palabra_id'))
               ->where('palabra', 'ilike', '%'.$letra.'%')
               ->get()
               ->random();
 
-            $rosco->palabras()->attach($palabra->id, [
-              'letra' => $letra,
-              'definicion' => DRAEService::getDefinition($palabra),
+            $definicion = DRAEService::getDefinition($palabra);
+
+            PalabraRosco::create([
+              'palabra_id'      => $palabra->id,
+              'rosco_id'        => $rosco->id,
+              'letra'           => $letra,
+              'tipo_definicion' => $definicion['type'],
+              'definicion'      => $definicion['definition'],
             ]);
           } else {
             $palabra = Palabra::where('inicial', $letra)
               ->where('drae_id', '!=', null)
-              ->whereNotIn('id', $rosco->palabras->pluck('id'))
+              ->whereNotIn('id', $rosco->palabrasRoscos->pluck('palabra_id'))
               ->get()
               ->random();
 
-            $rosco->palabras()->attach($palabra->id, [
-              'letra' => $letra,
-              'definicion' => DRAEService::getDefinition($palabra),
+            $definicion = DRAEService::getDefinition($palabra);
+
+            PalabraRosco::create([
+              'palabra_id'      => $palabra->id,
+              'rosco_id'        => $rosco->id,
+              'letra'           => $letra,
+              'tipo_definicion' => $definicion['type'],
+              'definicion'      => $definicion['definition'],
             ]);
           }
         });
@@ -113,12 +124,15 @@ class RoscosController extends Controller
 
     public function palabraEstado(PalabraRosco $palabraRosco)
     {
-
         $palabraRosco->update($this->validate(request(), [
             'estado'  => ['required'],
         ]));
 
-        $palabraRosco->rosco->notify(new PalabraRoscoEstado($palabraRosco));
+        \Log::info([
+          'before event' => $palabraRosco->rosco_id,
+        ]);
+        PalabraStatusUpdated::dispatch($palabraRosco);
+        //$palabraRosco->rosco->notify(new PalabraRoscoEstado($palabraRosco));
 
         return redirect()
             ->route('roscos.show',  ['rosco' => $palabraRosco->rosco_id])

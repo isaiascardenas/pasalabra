@@ -41,8 +41,9 @@ class DRAEService
           //return $defs->random()['definition'];
         //}
 
-        return array_key_exists('definition', $defs->first()) ? $defs->first()['definition'] : '';
-
+        return array_key_exists('definition', $defs->first()) ?
+          $defs->first() :
+          ['type' => 'def', 'definition' => ''];
 
     } catch (Exception $e) {
       \Log::info('Error:', $word);

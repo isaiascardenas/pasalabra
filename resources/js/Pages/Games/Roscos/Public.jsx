@@ -1,25 +1,18 @@
 import React from 'react';
-import Echo from 'laravel-echo';
 
 export default function Rosco(props) {
-  console.log(process);
+  window.Echo.private(`roscos.${props.rosco.id}`).listen(
+    'PalabraStatusUpdated',
+    (e) => {
+      console.log('event', e);
+    }
+  );
+  console.log(window.Echo);
 
-  const options = {
-    broadcaster: 'pusher',
-    key: process.env.MIX_PUSHER_APP_KEY,
-    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-    forceTLS: true,
+  //window.Echo.private(`App.Roscos.${props.rosco.id}`).notification((data) => {
+  //console.log(data);
+  //});
 
-    //authEndpoint is your apiUrl + /broadcasting/auth
-    //authEndpoint: process.env.pusher.authEndpoint,
-  };
-
-  const echo = new Echo(options);
-  echo.private(`App.Roscos.${props.rosco.id}`).notification((data) => {
-    console.log(data);
-  });
-
-  console.log(props.rosco);
   const letras = props.rosco.palabras_roscos.map((letra) => {
     if (letra.estado == 'pasapalabra') {
       return (

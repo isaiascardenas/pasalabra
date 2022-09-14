@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\PalabraRosco;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -12,6 +13,10 @@ use Illuminate\Support\Facades\Broadcast;
 | used to check if an authenticated user can listen to the channel.
 |
 */
+
+Broadcast::channel('private-roscos.{roscoId}', function ($roscoId) {
+    return true;
+});
 
 Broadcast::channel('App.Models.Rosco.{id}', function ($rosco, $id) {
     return (int) $rosco->id === (int) $id;

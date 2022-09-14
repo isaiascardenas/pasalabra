@@ -14,14 +14,15 @@ class PalabraRoscoEstado extends Notification
 
     protected $palabraRosco;
 
-    public function __construct($palabraRosco)
+    public function __construct(PalabraRosco $palabraRosco)
     {
         $this->palabraRosco = $palabraRosco;
     }
 
     public function via($notifiable)
     {
-        return ['database', 'broadcast'];
+        return ['broadcast'];
+        //return ['database', 'broadcast'];
     }
 
     public function toArray($notifiable)
