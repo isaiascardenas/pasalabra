@@ -5,22 +5,51 @@ class RoscoPublic extends Component {
     super(props);
     console.log(this.props.rosco);
     this.state = {
-      palabras: this.props.rosco.palabras_roscos
+      palabras: this.props.rosco.palabras_roscos,
+      start: false,
+      time: 183,
     };
 
-      window.Echo.private(`roscos.${props.rosco.id}`).listen(
-    'PalabraStatusUpdated',
-    (e) => {
-      console.log(e['palabra-rosco']);
-      this.setLetra(e['palabra-rosco']);
-    }
-  );
+    window.Echo.private(`roscos.${props.rosco.id}`)
+    .listen(
+      'PalabraStatusUpdated',
+      (e) => {
+        console.log(e['palabra-rosco']);
+        this.setLetra(e['palabra-rosco']);
+      }
+    )
+    .listen(
+      'RoscoStart',
+      (e) => {
+        console.log(e['rosco']);
+        this.startRosco();
+      }
+    )
+    .listen(
+      'RoscoStop',
+      (e) => {
+        console.log(e['rosco']);
+        this.stopRosco();
+      }
+    );
   }
 
+  startRosco = () => {
+    console.log('iniciar rosco');
+    this.setState({ start: true });
+  };
+
+  stopRosco = () => {
+    console.log('parar rosco');
+    this.setState({ start: false });
+  };
+
   setLetra = (palabraRosco) => {
-    this.setState(state => {
+    this.setState((state) => {
       let palabras = this.state.palabras;
-      let word = window._.remove(this.state.palabras, (l) => { return l.id == palabraRosco.id })[0];
+      let word = window._.remove(this.state.palabras, (l) => {
+        return l.id == palabraRosco.id;
+      })[0];
 
       word.estado = palabraRosco.estado;
 
@@ -31,7 +60,7 @@ class RoscoPublic extends Component {
         palabras,
       };
     });
-  }
+  };
 
   letraRosco = (letra) => {
     if (letra.estado == 'pasapalabra') {

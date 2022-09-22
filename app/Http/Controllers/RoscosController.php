@@ -126,8 +126,8 @@ class RoscosController extends Controller
 
     public function start(Rosco $rosco)
     {
-        dd('start');
         RoscoStart::dispatch($rosco);
+        dd('start');
     }
 
     public function stop(Rosco $rosco)
