@@ -1,50 +1,58 @@
 import React, { Component } from 'react';
+import RoscoLayout from './RoscoLayout';
 
 class RoscoPublic extends Component {
   constructor(props) {
     super(props);
-    console.log(this.props.rosco);
     this.state = {
       palabras: this.props.rosco.palabras_roscos,
+      time: this.props.rosco.tiempo,
+      correctas: this.props.rosco.correctas,
       start: false,
-      time: 183,
+      timerInterval: null,
     };
 
     window.Echo.private(`roscos.${props.rosco.id}`)
     .listen(
       'PalabraStatusUpdated',
       (e) => {
-        console.log(e['palabra-rosco']);
         this.setLetra(e['palabra-rosco']);
       }
     )
     .listen(
       'RoscoStart',
       (e) => {
-        console.log(e['rosco']);
         this.startRosco();
       }
     )
     .listen(
       'RoscoStop',
       (e) => {
-        console.log(e['rosco']);
         this.stopRosco();
       }
     );
   }
 
   startRosco = () => {
-    console.log('iniciar rosco');
-    this.setState({ start: true });
+    this.setState({
+      start: true,
+      timerInterval: setInterval(() => {
+        this.setState({ time: this.state.time - 1 });
+      }, 1000),
+    });
   };
 
   stopRosco = () => {
-    console.log('parar rosco');
-    this.setState({ start: false });
+    this.setState({
+      start: false,
+      timerInterval: clearInterval(this.state.timerInterval),
+    });
   };
 
   setLetra = (palabraRosco) => {
+    if (palabraRosco.estado == 'correcto') {
+      this.setState({ correctas: this.state.correctas + 1 });
+    }
     this.setState((state) => {
       let palabras = this.state.palabras;
       let word = window._.remove(this.state.palabras, (l) => {
@@ -99,7 +107,7 @@ class RoscoPublic extends Component {
 
   render() {
     return (
-      <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+      <div className="mx-auto mb-12 max-w-3xl sm:px-6 lg:px-8">
         <p className="justify-center py-12">Rosco</p>
         <div className="justify-center grid">
           <div className="bg-white rounded-lg shadow">
@@ -210,18 +218,17 @@ class RoscoPublic extends Component {
             </div>
           </div>
         </div>
-        <div className="flex justify-between">
-          <div className="flex space-x-3">
-            <span className="flex items-center justify-center w-16 h-16 text-xl font-bold text-center text-white uppercase bg-indigo-600 rounded-full">
-              183
+
+        <div className="flex justify-between items-center fixed bottom-0 right-0 left-0 mx-auto my-12 max-w-3xl sm:px-0">
+          <span className="items-center p-4 text-white text-lg font-semibold bg-indigo-600 border border-transparent rounded-full shadow-xl">
+          { this.state.time }
+          </span>
+
+            <span className="ml-3 items-center px-5 py-4 text-white text-lg font-semibold bg-green-600 border border-transparent rounded-full shadow-xl">
+            { this.state.correctas }
             </span>
-          </div>
-          <div className="flex space-x-3">
-            <span className="flex items-center justify-center w-16 h-16 text-xl font-bold text-center text-white uppercase bg-green-600 rounded-full">
-              0
-            </span>
-          </div>
         </div>
+
       </div>
     );
   }

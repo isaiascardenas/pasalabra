@@ -23,6 +23,7 @@ class RoscosController extends Controller
     {
         $rosco = Rosco::create([
           'correctas' => 0,
+          'tiempo' => 200,
           'opciones' => [
             'contiene' => 12,
           ],
@@ -127,12 +128,13 @@ class RoscosController extends Controller
     public function start(Rosco $rosco)
     {
         RoscoStart::dispatch($rosco);
-        dd('start');
     }
 
     public function stop(Rosco $rosco)
     {
-        dd('stop');
+        $rosco->update([
+          'tiempo' => request()->time,
+        ]);
         RoscoStop::dispatch($rosco);
     }
 
@@ -146,6 +148,11 @@ class RoscosController extends Controller
           $palabraRosco->rosco->update([
             'correctas' => $palabraRosco->rosco->correctas + 1,
           ]);
+        } else {
+          $palabraRosco->rosco->update([
+            'tiempo' => request()->time,
+          ]);
+          RoscoStop::dispatch($palabraRosco->rosco);
         }
 
         PalabraStatusUpdated::dispatch($palabraRosco);

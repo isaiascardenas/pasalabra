@@ -19,7 +19,7 @@ class RoscoLayout extends Component {
         this.setState({ time: this.state.time - 1 });
       }, 1000),
     });
-    //Inertia.post(route('roscos.start', this.props.rosco.id));
+    Inertia.post(route('roscos.start', this.props.rosco.id));
   };
 
   stopRosco = () => {
@@ -27,7 +27,9 @@ class RoscoLayout extends Component {
       start: false,
       timerInterval: clearInterval(this.state.timerInterval),
     });
-    //Inertia.post(route('roscos.stop', this.props.rosco.id));
+    Inertia.post(route('roscos.stop', this.props.rosco.id), {
+      time: this.state.time,
+    });
   };
 
   changeEstado = (palabra, estado) => {

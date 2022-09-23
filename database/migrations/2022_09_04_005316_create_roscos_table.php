@@ -18,7 +18,7 @@ return new class extends Migration
             $table->json('opciones')->nullable();
             $table->json('comodines')->nullable();
             $table->integer('correctas')->default(0);
-            $table->string('tiempo')->nullable();
+            $table->integer('tiempo')->nullable();
             $table->timestamps();
         });
     }
